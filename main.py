@@ -3,12 +3,13 @@ import http.client
 import urllib.parse
 import uuid
 import os
+from requests import post
 
 # Assuming you have an environment variable named NEXT_PROXY_URL for the next proxy's URL
 # and DATACENTER_LOCATION for the current datacenter's location.
 # If NEXT_PROXY_URL is not set, default to a local URL for testing.
-NEXT_PROXY_URL = os.getenv('NEXT_PROXY_URL', 'http://localhost:8001')
 DATACENTER_LOCATION = os.getenv('DATACENTER_LOCATION', 'local_datacenter')
+NEXT_PROXY_URL = post('http://localhost:8002/register', data={'datacenter': DATACENTER_LOCATION}).json()['next_proxy_url']
 
 # Initialize a global list to store request tags and datacenter locations
 request_traces = []
@@ -61,7 +62,7 @@ class ProxyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 def run(server_class=http.server.HTTPServer,
         handler_class=ProxyHTTPRequestHandler,
-        port=8000):
+        port=8001):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     print(f"Starting proxy server on port {port} with datacenter location: {DATACENTER_LOCATION}...")
@@ -70,4 +71,3 @@ def run(server_class=http.server.HTTPServer,
 
 if __name__ == '__main__':
     run()
-

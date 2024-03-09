@@ -16,7 +16,7 @@ class TestServerHandler(BaseHTTPRequestHandler):
         self.wfile.write(bytes(message, "utf8"))
 
 
-def run(server_class=HTTPServer, handler_class=TestServerHandler, port=8001):
+def run(server_class=HTTPServer, handler_class=TestServerHandler, port=8002):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     print(f"Starting test server on port {port}...")
